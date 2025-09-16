@@ -29,7 +29,6 @@ public class CricketCoach implements Coach {
     }
     //PreDestroy annotation is  a life cycle method and it is same as ngOnDestroy lifecycle hook of angular(Called when bean is getting destroyed)
     //Commonly used to close DB connections, shutdown threads, release resources.
-    
 //    For "prototype" scoped beans, Spring does not call the destroy method. Gasp!
 //    For singleton beans, the container creates them once and also manages their full lifecycle (including destruction).
 //

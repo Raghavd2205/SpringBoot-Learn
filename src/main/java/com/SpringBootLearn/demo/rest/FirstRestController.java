@@ -17,7 +17,7 @@ public class FirstRestController {
 
     //Auto wiring using constructor , need to use when we have all required dependency (recommendede by spring.io team)
     @Autowired
-    public FirstRestController(@Qualifier("cricketCoach") Coach theCoach,@Qualifier("cricketCoach") Coach theCoach2){
+    public FirstRestController(@Qualifier("cricketCoach") Coach theCoach,@Qualifier("aquatic") Coach theCoach2){
         System.out.println("In Constructor"+getClass().getSimpleName());
         myCoach = theCoach;
         myCoach2 = theCoach2;
@@ -31,7 +31,7 @@ public class FirstRestController {
 //    }
     @GetMapping("/dailyworkout")
     public String getDailyWorkout() {
-        return myCoach.getDailyWorkout();
+        return myCoach2.getDailyWorkout();
     }
     @GetMapping("/checkscope")
     public boolean check() {
