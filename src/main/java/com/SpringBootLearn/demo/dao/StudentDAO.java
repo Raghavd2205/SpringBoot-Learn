@@ -1,2 +1,7 @@
-package com.SpringBootLearn.demo.dao;public interface StudentDAO {
+package com.SpringBootLearn.demo.dao;
+
+import com.SpringBootLearn.demo.entity.Student;
+
+public interface StudentDAO {
+    void save(Student theStudent);
 }
