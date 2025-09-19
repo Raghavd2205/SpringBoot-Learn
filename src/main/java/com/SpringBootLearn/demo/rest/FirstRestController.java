@@ -1,15 +1,22 @@
 package com.SpringBootLearn.demo.rest;
 
+import com.SpringBootLearn.demo.dao.StudentDAO;
+import com.SpringBootLearn.demo.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.SpringBootLearn.demo.interfaces.Coach;
+
+import java.util.List;
+
 @RestController
 public class FirstRestController {
     private Coach myCoach;
     private Coach myCoach2;
+
+    private final StudentDAO studentDAO;
     //Field Injection nopt recommendede by spring.io team because it makes the code harder to unit test
 //    @Autowire
 //    @Qualifier("baseballCoach")
@@ -17,10 +24,11 @@ public class FirstRestController {
 
     //Auto wiring using constructor , need to use when we have all required dependency (recommendede by spring.io team)
     @Autowired
-    public FirstRestController(@Qualifier("cricketCoach") Coach theCoach,@Qualifier("aquatic") Coach theCoach2){
+    public FirstRestController(@Qualifier("cricketCoach") Coach theCoach,@Qualifier("aquatic") Coach theCoach2,StudentDAO studentDAO){
         System.out.println("In Constructor"+getClass().getSimpleName());
         myCoach = theCoach;
         myCoach2 = theCoach2;
+        this.studentDAO = studentDAO;
     }
 
     //Auto wiring using setter method, need to use when we have some optional dependency
@@ -54,5 +62,11 @@ public class FirstRestController {
     @GetMapping("/getdetails")
     public String getName() {
         return "Coach Name is:"+coachName+" \nTeam Name is:"+teamName;
+    }
+    @GetMapping("/students")
+    public List<Student> readAllStudent() {
+        List<Student> theStudent = studentDAO.findAll();
+        System.out.println(theStudent.get(0));
+       return theStudent;
     }
 }
