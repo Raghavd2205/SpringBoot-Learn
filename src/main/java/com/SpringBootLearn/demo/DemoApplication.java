@@ -26,8 +26,31 @@ public class DemoApplication {
 			//createMultipleStudent(studentDAO);
 			//readStudent(studentDAO);
 			//readAllStudent(studentDAO);
-			readStudentByLastName(studentDAO);
+			//readStudentByLastName(studentDAO);
+			//updateStudentById(studentDAO);
+			//deleteStudentById(studentDAO);
+			// deleteAll(studentDAO);
 		};
+	}
+
+	private void deleteAll(StudentDAO studentDAO) {
+		int nom = studentDAO.deleteAll();
+		System.out.println("Nom of rows deleted: "+nom);
+	}
+
+	private void deleteStudentById(StudentDAO studentDAO) {
+		Student myStudent = studentDAO.findById(2);
+		if (myStudent != null) {
+			studentDAO.delete(myStudent);
+		}
+
+	}
+
+	private void updateStudentById(StudentDAO studentDAO) {
+		Student myStudent = studentDAO.findById(1);
+		myStudent.setEmail("raghavd2205@gmail.com");
+		studentDAO.update(myStudent);
+		System.out.println("Update Value: "+myStudent);
 	}
 
 	private void readStudentByLastName(StudentDAO studentDAO) {
@@ -73,4 +96,5 @@ public class DemoApplication {
 		// display id of created student
 		System.out.println("Id of new student is "+tempStudent.getId());
 	}
+
 }

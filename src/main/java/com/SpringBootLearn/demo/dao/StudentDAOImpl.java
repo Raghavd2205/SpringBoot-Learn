@@ -47,5 +47,25 @@ public class StudentDAOImpl implements StudentDAO{
         return theQuery.getResultList();
     }
 
+    @Override
+    @Transactional
+    public void update(Student theStudent) {
+        entityManager.merge(theStudent);
+    }
 
+    @Override
+    @Transactional
+    public void delete(Student theStudent){
+//        merge() = smart → reattaches detached entities.
+//        remove() = strict → works only on managed entities, thats why you are saying bellow line of merge.
+        Student managed = entityManager.merge(theStudent); // reattach
+        entityManager.remove(managed);
+    }
+
+    @Override
+    @Transactional
+    public int deleteAll() {
+        int nom= entityManager.createQuery("DELETE FROM Student").executeUpdate();
+        return nom;
+    }
 }
