@@ -63,10 +63,5 @@ public class FirstRestController {
     public String getName() {
         return "Coach Name is:"+coachName+" \nTeam Name is:"+teamName;
     }
-    @GetMapping("/students")
-    public List<Student> readAllStudent() {
-        List<Student> theStudent = studentDAO.findAll();
-        System.out.println(theStudent.get(0));
-       return theStudent;
-    }
+
 }
