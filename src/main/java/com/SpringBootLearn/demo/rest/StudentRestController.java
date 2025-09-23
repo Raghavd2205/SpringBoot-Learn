@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
 public class StudentRestController {
+    // we need to use service layer in rest controller instead of dao layer, dao layer needs to be used in service layer. Here we are using dao layer directly which is not a good practice !!
     private final StudentDAO studentDAO;
     public StudentRestController(StudentDAO studentDAO) {
         this.studentDAO = studentDAO;
@@ -31,5 +32,6 @@ public class StudentRestController {
         }
         return theStudent;
     }
+    @PostMapping("/student")
 
 }
