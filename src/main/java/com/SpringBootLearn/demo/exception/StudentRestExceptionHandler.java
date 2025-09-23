@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 //Spring will automatically apply it wherever the matching exception is thrown.
 @ControllerAdvice
 public class StudentRestExceptionHandler {
-    
+    @ExceptionHandler
     public ResponseEntity<StudentErrorResponse> handleException(StudentNotFoundException exc){
         StudentErrorResponse error = new StudentErrorResponse();
         error.setStatus(HttpStatus.NOT_FOUND.value());
@@ -24,7 +24,7 @@ public class StudentRestExceptionHandler {
         return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
     }
 
-
+    @ExceptionHandler
     public ResponseEntity<StudentErrorResponse> handleException(Exception exc){
         StudentErrorResponse error = new StudentErrorResponse();
         error.setStatus(HttpStatus.BAD_REQUEST.value());
