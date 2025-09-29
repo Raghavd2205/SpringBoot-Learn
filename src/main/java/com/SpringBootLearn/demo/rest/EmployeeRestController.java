@@ -3,10 +3,7 @@ package com.SpringBootLearn.demo.rest;
 import com.SpringBootLearn.demo.dao.EmployeeDAO;
 import com.SpringBootLearn.demo.entity.Employee;
 import com.SpringBootLearn.demo.service.EmployeeService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +25,19 @@ public class EmployeeRestController {
     @GetMapping("/employee/{employeeId}")
     public Employee listEmployeeById(@PathVariable int employeeId){
         return employeeService.findEmployeeById(employeeId);
+    }
+    @PostMapping("/employee")
+    public Employee addEmployee(@RequestBody Employee theEmployee){
+        return employeeService.addEmployee(theEmployee);
+    }
+    @PutMapping("/employee")
+    public Employee updateEmployee(@RequestBody Employee theEmployee){
+        return employeeService.addEmployee(theEmployee);
+    }
+    @DeleteMapping("/employee/{employeeId}")
+    public String deleteEmployee(@PathVariable int employeeId){
+     Employee theEmployee = employeeService.findEmployeeById(employeeId);
+     employeeService.delete(theEmployee);
+     return "Employee having ID "+employeeId+" deleted successfuly !!";
     }
 }

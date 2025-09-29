@@ -32,6 +32,6 @@ public class StudentRestController {
         }
         return theStudent;
     }
-    @PostMapping("/student")
+
 
 }
