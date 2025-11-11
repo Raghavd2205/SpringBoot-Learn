@@ -38,6 +38,6 @@ public class EmployeeRestController {
     public String deleteEmployee(@PathVariable int employeeId){
      Employee theEmployee = employeeService.findEmployeeById(employeeId);
      employeeService.delete(theEmployee);
-     return "Employee having ID "+employeeId+" deleted successfuly !!";
+     return "Employee having ID "+employeeId+" deleted successfully !!";
     }
 }
