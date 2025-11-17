@@ -52,5 +52,18 @@ public class UserRestController {
 
     }
     @PutMapping("/{id}")
-    
+    public ResponseEntity<User> updateUserById(@PathVariable Integer id,
+                                               @Valid @RequestBody User user) {
+        User updated = userService.updateUser(id, user);
+        return ResponseEntity.ok(updated);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> updateProduct(@PathVariable Integer id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok("Deleted Successfuly");
+    }
+    @GetMapping("/{id}/posts")
+    public ResponseEntity<List<Post>> getAllUsers(@PathVariable Integer id){
+        return ResponseEntity.status(200).body(userService.findPostsById(id));
+    }
 }

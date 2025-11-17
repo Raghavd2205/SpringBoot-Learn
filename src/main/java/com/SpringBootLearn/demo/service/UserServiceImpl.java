@@ -4,9 +4,11 @@ import com.SpringBootLearn.demo.dao.UserRepository;
 import com.SpringBootLearn.demo.entity.Post;
 import com.SpringBootLearn.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepository  userRepository;
@@ -41,8 +43,7 @@ public class UserServiceImpl implements UserService{
        User user = getUserById(id);
        user.setName(userDetails.getName());
        user.setEmail(userDetails.getEmail());
-       user.setPosts(userDetails.getPosts());
-        return user;
+        return userRepository.save(user);
     }
 
     @Override

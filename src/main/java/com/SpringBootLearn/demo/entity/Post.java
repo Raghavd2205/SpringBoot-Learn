@@ -21,6 +21,49 @@ public class Post {
 
     private LocalDateTime createdAt;
 
+    public Post() {
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public @NotBlank(message = "Content cannot be empty") String getContent() {
+        return content;
+    }
+
+    public void setContent(@NotBlank(message = "Content cannot be empty") String content) {
+        this.content = content;
+    }
+
+    public @NotBlank(message = "Title is required") String getTitle() {
+        return title;
+    }
+
+    public void setTitle(@NotBlank(message = "Title is required") String title) {
+        this.title = title;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
