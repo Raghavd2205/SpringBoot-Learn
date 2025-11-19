@@ -2,37 +2,60 @@ package com.SpringBootLearn.demo.service;
 
 import com.SpringBootLearn.demo.dao.PostRepository;
 import com.SpringBootLearn.demo.dao.UserRepository;
+import com.SpringBootLearn.demo.dto.PostRequestDTO;
+import com.SpringBootLearn.demo.dto.PostResponseDTO;
 import com.SpringBootLearn.demo.entity.Post;
 import com.SpringBootLearn.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
-    @Autowired
-    private PostRepository postRepository;
-    private UserRepository userRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+
+    public PostServiceImpl(PostRepository postRepository,
+                           UserRepository userRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+    }
     @Override
-    public Post createPost(Integer userId, Post post) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+    public PostResponseDTO createPost(int userId, PostRequestDTO dto) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Post post = new Post();
+        post.setTitle(dto.getTitle());
+        post.setContent(dto.getContent());
         post.setUser(user);
-        return postRepository.save(post);
+
+        Post saved = postRepository.save(post);
+
+        return toPostDTO(saved);
+    }
+
+
+    @Override
+    public PostResponseDTO getPostById(Integer id) {
+         Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found with id " + id));
+        return toPostDTO(post);
     }
 
     @Override
-    public Post getPostById(Integer id) {
-        return null;
+    public List<PostResponseDTO> getAllPosts() {
+        return postRepository.findAll()
+                .stream()
+                .map(this::toPostDTO)
+                .collect(Collectors.toList());
+
     }
 
     @Override
-    public List<Post> getAllPosts() {
-        return List.of();
-    }
-
-    @Override
-    public Post updatePost(Integer id, Post postDetails) {
+    public PostResponseDTO updatePost(Integer id, PostRequestDTO postDetails) {
         return null;
     }
 
@@ -42,11 +65,22 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsByUser(Integer userId) {
+    public List<PostResponseDTO> getPostsByUser(Integer userId) {
         return List.of();
     }
   @Override
-    public List<Post> searchPosts(String keyword) {
+    public List<PostResponseDTO> searchPosts(String keyword) {
         return List.of();
     }
+    private PostResponseDTO toPostDTO(Post post) {
+        PostResponseDTO dto = new PostResponseDTO();
+        dto.setId(post.getId());
+        dto.setTitle(post.getTitle());
+        dto.setContent(post.getContent());
+        dto.setCreatedAt(post.getCreatedAt());
+        dto.setUserId(post.getUser().getId());
+        return dto;
+    }
+
+
 }

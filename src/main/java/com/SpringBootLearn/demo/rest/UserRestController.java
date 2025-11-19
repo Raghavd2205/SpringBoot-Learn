@@ -1,69 +1,78 @@
 package com.SpringBootLearn.demo.rest;
 
-import com.SpringBootLearn.demo.entity.Post;
-import com.SpringBootLearn.demo.entity.Product;
-import com.SpringBootLearn.demo.entity.User;
+import com.SpringBootLearn.demo.dto.UserRequestDTO;
+import com.SpringBootLearn.demo.dto.UserResponseDTO;
+import com.SpringBootLearn.demo.dto.PostResponseDTO;
 import com.SpringBootLearn.demo.service.UserService;
+
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserRestController {
-    @Autowired
-    private UserService userService;
 
-    @GetMapping("/{userId}/posts")
-    public ResponseEntity<?> getPostsByUserId(@PathVariable Integer userId) {
-        List<Post> result = userService.findPostsById(userId);
-        if(result.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Product not found with id " + userId);
-        
-        }
-        else{
-            return ResponseEntity.ok(result);
-        }
+    private final UserService userService;
 
+    public UserRestController(UserService userService) {
+        this.userService = userService;
     }
+
+    // ---------------- CREATE USER ----------------
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user){
-        return ResponseEntity.status(201).body(userService.createUser(user));
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO dto) {
+        UserResponseDTO created = userService.createUser(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
+
+    // ---------------- GET ALL USERS ----------------
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(){
-        return ResponseEntity.status(200).body(userService.getAllUsers());
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
+
+    // ---------------- GET USER BY ID ----------------
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Integer id){
-        User result = userService.getUserById(id);
-        if (result != null) {
-            return ResponseEntity.ok(result);
-        } else {
+    public ResponseEntity<?> getUserById(@PathVariable Integer id) {
+        try {
+            return ResponseEntity.ok(userService.getUserById(id));
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("User not found with id " + id);
         }
-
     }
+
+    // ---------------- UPDATE USER ----------------
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUserById(@PathVariable Integer id,
-                                               @Valid @RequestBody User user) {
-        User updated = userService.updateUser(id, user);
+    public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable Integer id,
+                                                          @Valid @RequestBody UserRequestDTO dto) {
+        UserResponseDTO updated = userService.updateUser(id, dto);
         return ResponseEntity.ok(updated);
     }
+
+    // ---------------- DELETE USER ----------------
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok("Deleted Successfuly");
+        return ResponseEntity.ok("Deleted Successfully");
     }
-    @GetMapping("/{id}/posts")
-    public ResponseEntity<List<Post>> getAllUsers(@PathVariable Integer id){
-        return ResponseEntity.status(200).body(userService.findPostsById(id));
+
+    // ---------------- GET USER POSTS ----------------
+    @GetMapping("/{userId}/posts")
+    public ResponseEntity<?> getPostsByUserId(@PathVariable Integer userId) {
+        try {
+            List<PostResponseDTO> posts = userService.findPostsById(userId);
+            return posts.isEmpty()
+                    ? ResponseEntity.status(HttpStatus.NOT_FOUND).body("No posts found for user " + userId)
+                    : ResponseEntity.ok(posts);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found with id " + userId);
+        }
     }
 }
