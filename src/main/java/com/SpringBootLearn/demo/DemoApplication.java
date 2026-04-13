@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @SpringBootApplication(
-		scanBasePackages = {"com.SpringBootLearn.demo"}
+		scanBasePackages = {"com.SpringBootLearn.demo"},
+		exclude = {
+		org.springframework.boot.autoconfigure.security.servlet.
+				UserDetailsServiceAutoConfiguration.class
+}
 )
 public class DemoApplication {
 

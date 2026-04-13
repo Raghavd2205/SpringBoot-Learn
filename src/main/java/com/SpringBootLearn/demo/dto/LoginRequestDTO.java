@@ -3,9 +3,7 @@ package com.SpringBootLearn.demo.dto;
 import lombok.Data;
 
 @Data
-public class UserRequestDTO {
-    private String name;
+public class LoginRequestDTO {
     private String email;
     private String password;
 }
-

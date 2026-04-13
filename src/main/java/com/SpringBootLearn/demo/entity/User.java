@@ -3,10 +3,16 @@ package com.SpringBootLearn.demo.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+
 import java.util.*;
 
 @Entity
 @Table(name="users")
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +27,9 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @NotBlank(message = "password is required")
+    private String password;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
@@ -32,14 +41,6 @@ public class User {
         this.posts = posts;
         this.email = email;
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public @NotBlank(message = "Name is required") String getName() {
@@ -58,11 +59,4 @@ public class User {
         this.email = email;
     }
 
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
 }
