@@ -1,9 +1,11 @@
 package com.SpringBootLearn.demo.rest;
 
+import com.SpringBootLearn.demo.common.ApiResponse;
 import com.SpringBootLearn.demo.dto.ExpenseTrackerResponseDTO;
 import com.SpringBootLearn.demo.dto.LoginRequestDTO;
 import com.SpringBootLearn.demo.dto.LoginResponseDTO;
 import com.SpringBootLearn.demo.service.AuthService;
+import com.SpringBootLearn.demo.utility.ResponseUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +23,7 @@ public class AuthRestController {
         this.authService = authService;
     }
     @GetMapping("/login")
-    ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest){
-        return ResponseEntity.ok(this.authService.login(loginRequest));
+    ResponseEntity<ApiResponse<LoginResponseDTO>> login(@RequestBody LoginRequestDTO loginRequest){
+        return ResponseUtil.success(this.authService.login(loginRequest),200);
     }
 }

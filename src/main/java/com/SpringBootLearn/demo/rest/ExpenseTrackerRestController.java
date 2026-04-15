@@ -1,8 +1,10 @@
 package com.SpringBootLearn.demo.rest;
 
+import com.SpringBootLearn.demo.common.ApiResponse;
 import com.SpringBootLearn.demo.dto.ExpenseTrackerRequestDTO;
 import com.SpringBootLearn.demo.dto.ExpenseTrackerResponseDTO;
 import com.SpringBootLearn.demo.service.ExpenseTrackerService;
+import com.SpringBootLearn.demo.utility.ResponseUtil;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -18,12 +20,13 @@ public class ExpenseTrackerRestController {
     }
 
     @PostMapping
-    ResponseEntity<ExpenseTrackerResponseDTO> addExpense(@RequestBody ExpenseTrackerRequestDTO expenseBody){
-        return ResponseEntity.status(201).body(this.expenseTrackerService.addExpense(expenseBody));
+    ResponseEntity<ApiResponse<ExpenseTrackerResponseDTO>> addExpense(@RequestBody ExpenseTrackerRequestDTO expenseBody){
+        return ResponseUtil.success(this.expenseTrackerService.addExpense(expenseBody),201);
     }
     @GetMapping
-    ResponseEntity<List<ExpenseTrackerResponseDTO>> findAllExpense(){
-        return ResponseEntity.ok(this.expenseTrackerService.getAllExpenses());
+    ResponseEntity <ApiResponse<List<ExpenseTrackerResponseDTO>>> findAllExpense(){
+        List<ExpenseTrackerResponseDTO> exp =  this.expenseTrackerService.getAllExpenses();
+        return ResponseUtil.success(exp,200);
     }
     @GetMapping("/{id}")
     ResponseEntity<ExpenseTrackerResponseDTO> findExpenseById(@PathVariable Integer id){
