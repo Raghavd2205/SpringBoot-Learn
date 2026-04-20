@@ -5,6 +5,8 @@ import com.SpringBootLearn.demo.dto.ExpenseTrackerRequestDTO;
 import com.SpringBootLearn.demo.dto.ExpenseTrackerResponseDTO;
 import com.SpringBootLearn.demo.service.ExpenseTrackerService;
 import com.SpringBootLearn.demo.utility.ResponseUtil;
+import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -20,13 +22,29 @@ public class ExpenseTrackerRestController {
     }
 
     @PostMapping
-    ResponseEntity<ApiResponse<ExpenseTrackerResponseDTO>> addExpense(@RequestBody ExpenseTrackerRequestDTO expenseBody){
+    ResponseEntity <ApiResponse <List<ExpenseTrackerResponseDTO>>> addExpense(@RequestBody List<ExpenseTrackerRequestDTO> expenseBody){
         return ResponseUtil.success(this.expenseTrackerService.addExpense(expenseBody),201);
     }
+//    @GetMapping
+//    ResponseEntity <ApiResponse<List<ExpenseTrackerResponseDTO>>> findAllExpense(){
+//        List<ExpenseTrackerResponseDTO> exp =  this.expenseTrackerService.getAllExpenses();
+//        return ResponseUtil.success(exp,200);
+//    }
     @GetMapping
-    ResponseEntity <ApiResponse<List<ExpenseTrackerResponseDTO>>> findAllExpense(){
-        List<ExpenseTrackerResponseDTO> exp =  this.expenseTrackerService.getAllExpenses();
-        return ResponseUtil.success(exp,200);
+    public ResponseEntity <ApiResponse<Page<ExpenseTrackerResponseDTO>>> getAllExpenses(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "5") Integer size,
+            @RequestParam(defaultValue = "id") String sortby,
+            @RequestParam(defaultValue = "desc") String sorttype,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Integer minamount,
+            @RequestParam(required = false) Integer maxamount
+    ) throws BadRequestException {
+
+        return ResponseUtil.success(
+                this.expenseTrackerService.getAllExpensesByPage(page, size,sortby,sorttype,category,minamount,maxamount),
+                200
+        );
     }
     @GetMapping("/{id}")
     ResponseEntity<ExpenseTrackerResponseDTO> findExpenseById(@PathVariable Integer id){
