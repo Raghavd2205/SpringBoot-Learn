@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    Product addProduct(Product product);
+    List<Product> addProduct(List<Product> product);
 
     List<Product> getAllProducts();
 
@@ -18,6 +18,7 @@ public interface ProductService {
 
     List<Product> findByCategory(String category);
     List<Product> findByNameContainingIgnoreCase(String category);
+    List<Product> searchProduct(String value);
 
 
 }

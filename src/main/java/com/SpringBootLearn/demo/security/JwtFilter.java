@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // 🔥 IMPORTANT: skip auth for login
-        if (path.contains("/api/v1/auth")) {
+        if (path.contains("/api/v1/auth") ||  (path.contains("/api/v1/users") && request.getMethod().equals("POST"))) {
             filterChain.doFilter(request, response);
             return;
         }

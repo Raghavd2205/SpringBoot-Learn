@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class PostRequestDTO {
+    public Integer id;
     private String title;
     private String content;
 
