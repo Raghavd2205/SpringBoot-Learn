@@ -1,17 +1,11 @@
 package com.SpringBootLearn.demo.rest;
 
 import com.SpringBootLearn.demo.common.ApiResponse;
-import com.SpringBootLearn.demo.dto.ExpenseTrackerRequestDTO;
-import com.SpringBootLearn.demo.dto.ExpenseTrackerResponseDTO;
-import com.SpringBootLearn.demo.dto.OrderRequestDTO;
-import com.SpringBootLearn.demo.dto.OrderResponseDTO;
+import com.SpringBootLearn.demo.dto.*;
 import com.SpringBootLearn.demo.service.OrderService;
 import com.SpringBootLearn.demo.utility.ResponseUtil;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +18,15 @@ public class OrderRestController {
         this.orderService = orderService;
     }
     @PostMapping("/addtocart")
-    ResponseEntity<ApiResponse<OrderResponseDTO>> addToCart(@RequestBody OrderRequestDTO cartBody){
+    ResponseEntity<ApiResponse<OrderResponseDTO>> addToCart(@RequestBody CartRequestDTO cartBody){
         return ResponseUtil.success(this.orderService.addToCart(cartBody),201);
+    }
+    @DeleteMapping ("/removefromcart")
+    ResponseEntity<ApiResponse<String>> removeFromCart(@RequestBody RemoveFromCartRequestDTO cartBody){
+        return ResponseUtil.success(this.orderService.removeFromCart(cartBody),200);
+    }
+    @PostMapping
+    ResponseEntity<ApiResponse<List<OrderResponseDTO>>> finalOrder(@RequestBody List<OrderRequestDTO> orderBody){
+        return ResponseUtil.success(this.orderService.finalOrder(orderBody),201);
     }
 }

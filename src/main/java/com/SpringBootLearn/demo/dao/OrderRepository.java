@@ -21,4 +21,5 @@ public interface OrderRepository  extends JpaRepository<Order, Integer> {
             @Param("userId") Integer userId,
             @Param("status") OrderStatus status
     );
+    Order findByOrderIdAndUserIdAndStatus(Integer orderId, Integer userId,OrderStatus status);
 }
