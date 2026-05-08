@@ -1,9 +1,6 @@
 package com.SpringBootLearn.demo.service;
 
-import com.SpringBootLearn.demo.dto.CartRequestDTO;
-import com.SpringBootLearn.demo.dto.OrderRequestDTO;
-import com.SpringBootLearn.demo.dto.OrderResponseDTO;
-import com.SpringBootLearn.demo.dto.RemoveFromCartRequestDTO;
+import com.SpringBootLearn.demo.dto.*;
 
 import java.util.List;
 
@@ -13,4 +10,9 @@ public interface OrderService {
     String removeFromCart(RemoveFromCartRequestDTO order);
 
     List<OrderResponseDTO> finalOrder(List<OrderRequestDTO> orders);
+
+    AddressResponseDTO addAddress(AddressRequestDTO address);
+    List<AddressResponseDTO> listAllAddress(Integer userId);
+    AddressResponseDTO updateAddress(AddressRequestDTO address);
+    String deleteAddress(AddressRequestDTO address);
 }

@@ -29,4 +29,20 @@ public class OrderRestController {
     ResponseEntity<ApiResponse<List<OrderResponseDTO>>> finalOrder(@RequestBody List<OrderRequestDTO> orderBody){
         return ResponseUtil.success(this.orderService.finalOrder(orderBody),201);
     }
+    @PostMapping("/address")
+    ResponseEntity<ApiResponse<AddressResponseDTO>> addAddress(@RequestBody AddressRequestDTO addressBody){
+        return ResponseUtil.success(this.orderService.addAddress(addressBody),201);
+    }
+    @GetMapping("/address/{userId}")
+    ResponseEntity<ApiResponse<List<AddressResponseDTO>>> getAddressById(@PathVariable Integer userId){
+        return ResponseUtil.success(this.orderService.listAllAddress(userId),200);
+    }
+    @PutMapping("/address")
+    ResponseEntity<ApiResponse<AddressResponseDTO>> updateAddress(@RequestBody AddressRequestDTO addressBody){
+        return ResponseUtil.success(this.orderService.updateAddress(addressBody),201);
+    }
+    @DeleteMapping("/address")
+    ResponseEntity<ApiResponse<String>> deleteAddress(@RequestBody AddressRequestDTO addressBody){
+        return ResponseUtil.success(this.orderService.deleteAddress(addressBody),200);
+    }
 }

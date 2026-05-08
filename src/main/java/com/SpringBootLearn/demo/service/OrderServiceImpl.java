@@ -1,16 +1,16 @@
 package com.SpringBootLearn.demo.service;
 
+import com.SpringBootLearn.demo.dao.AddressRepository;
 import com.SpringBootLearn.demo.dao.OrderRepository;
 import com.SpringBootLearn.demo.dao.UserRepository;
 import com.SpringBootLearn.demo.dao.ProductRepository;
-import com.SpringBootLearn.demo.dto.CartRequestDTO;
-import com.SpringBootLearn.demo.dto.OrderRequestDTO;
-import com.SpringBootLearn.demo.dto.OrderResponseDTO;
-import com.SpringBootLearn.demo.dto.RemoveFromCartRequestDTO;
+import com.SpringBootLearn.demo.dto.*;
+import com.SpringBootLearn.demo.entity.Address;
 import com.SpringBootLearn.demo.entity.Order;
 import com.SpringBootLearn.demo.entity.Product;
 import com.SpringBootLearn.demo.entity.User;
 import com.SpringBootLearn.demo.enums.OrderStatus;
+import com.SpringBootLearn.demo.mapper.AddressMapper;
 import com.SpringBootLearn.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +19,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class OrderServiceImpl implements OrderService{
     OrderRepository orderRepository;
     ProductRepository productRepository;
     UserRepository userRepository;
+    AddressRepository addressRepository;
 
-
-    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository,AddressRepository addressRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.addressRepository = addressRepository;
     }
 
     @Override
@@ -100,6 +104,73 @@ public class OrderServiceImpl implements OrderService{
             finalOrders.add(this.toOrderDto(finalOrder,"order"));
         }
         return finalOrders;
+    }
+
+    @Override
+    public AddressResponseDTO addAddress(AddressRequestDTO address) {
+        User user = userRepository.findById(address.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Address address1 = this.addressRepository.save(AddressMapper.toEntity(address,user));
+        return AddressMapper.toResponseDTO(address1);
+    }
+
+    @Override
+    public List<AddressResponseDTO> listAllAddress(Integer userId) {
+        List<AddressResponseDTO> dtos = new ArrayList<>();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (user.getId() > 0) {
+            List<Address> address1 = this.addressRepository.findAllByUserId(user.getId());
+            if(address1 != null){
+                dtos = address1.stream()
+                        .map(AddressMapper::toResponseDTO)
+                        .toList();
+            }
+        }
+    return dtos;
+
+
+
+    }
+
+    @Override
+    public AddressResponseDTO updateAddress(AddressRequestDTO address) {
+        Address address1 = this.addressRepository.findById(address.getId()).orElseThrow(() -> new ResourceNotFoundException("Address not found"));
+        User user = userRepository.findById(address.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        address1.setUser(user);
+        address1.setStreet1(address.getStreet1());
+        address1.setStreet2(address.getStreet2());
+        address1.setLandmark(address.getLandmark());
+        address1.setPinCode(address.getPinCode());
+        address1.setCity(address.getCity());
+        address1.setState(address.getState());
+        address1.setCountry(address.getCountry());
+        address1.setPrimary(address.isPrimary());
+        this.addressRepository.save(address1);
+        return AddressMapper.toResponseDTO(address1);
+    }
+
+    @Override
+    public String deleteAddress(AddressRequestDTO address) {
+        String value;
+        User user = userRepository.findById(address.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (this.addressRepository.existsById(address.getId())) {
+            this.addressRepository.delete(AddressMapper.toEntity(address,user));
+            if (!this.addressRepository.existsById(address.getId())) {
+                value = "Address Deleted Successfully";
+            }
+            else{
+                value = "Something went wrong";
+            }
+        }
+        else{
+            value = "Unable to find any address";
+        }
+
+        return value;
     }
 
     private Order toEntityCart(CartRequestDTO dto) {
